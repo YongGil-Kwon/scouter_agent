@@ -1,0 +1,15 @@
+@Library("JENKINS-SHARED-LIBRARIES@RELEASE") _
+
+pipelineAwsCloudAPMWrapper {
+    script          = this
+    profiles        = "dq"
+    buildOptions    = "clean build"
+    buildPath       = "billing-server"
+    awsArn          = "057448867526"
+    awsRegion       = "ap-northeast-2"
+    namespace       = "neon"
+    projectName     = "scouter-host"
+    helmValues      = "helm-values-dq.yaml"
+    scouterServer   = "scouter.infra.neon-dq.nwz.cloud"
+    notiWebHookUrl  = "https://chat.googleapis.com/v1/spaces/AAAAieVTqBM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=r4uMzHBCHuCOa0Kg6MF9J1SnaKBDuuIHsxTj8xvnKxE%3D"
+}

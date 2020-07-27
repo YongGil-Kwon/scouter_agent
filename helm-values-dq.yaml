@@ -1,0 +1,103 @@
+monitor:
+  enabled: true
+  namespace: neon
+  nonheap_user: 200
+  memory: 80
+  cpu: 70
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 512Mi
+
+strategy:
+  rollingUpdate:
+  type: RollingUpdate
+
+image:
+  repository: 057448867526.dkr.ecr.ap-northeast-2.amazonaws.com/scouter
+  tag: latest
+
+service:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8102
+      protocol: TCP
+  annotations: {}
+
+ingress:
+  enabled: false
+
+env:
+  SPRING_PROFILES_ACTIVE: dq
+  _JAVA_OPTIONS: "-Duser.language=ko -Duser.country=KR -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -Duser.timezone=Asia/Seoul"
+
+shutdownWaitSeconds: 25
+
+livenessProbe:
+  exec:
+    command:
+      - cat
+      - /tmp/healthy
+  initialDelaySeconds: 10
+  periodSeconds: 5
+
+#  initialDelaySeconds: 50
+#  periodSeconds: 10
+#  successThreshold: 1
+#  failureThreshold: 3
+#  timeoutSeconds: 5
+#  probeType: "httpGet"
+#  path: "/actuator/health"
+#  scheme: "HTTP"
+#  port: 8102
+
+readinessProbe:
+  exec:
+    command:
+      - ls
+      - /var/ready
+  initialDelaySeconds: 10
+  periodSeconds: 5
+#  initialDelaySeconds: 50
+#  periodSeconds: 10
+#  successThreshold: 3
+#  failureThreshold: 3
+#  timeoutSeconds: 5
+#  probeType: "httpGet"
+#  path: "/actuator/health"
+#  scheme: "HTTP"
+#  port: 8102
+
+resources:
+  requests:
+    cpu: 400m
+    memory: 512Mi
+  limits:
+    cpu: 600m
+    memory: 768Mi
+
+containersecurity:
+  runAsUser: 1001
+
+securityContext:
+#  runAsUser: 1001
+#  fsGroup: 1001
+
+persistence:
+  enabled: false
+
+apigateway:
+  mapping:
+    enabled: false
+    annotations: {}
+  auth:
+    enabled: false
+    annotations: {}
+
+istio:
+  circuit:
+    enabled: false
